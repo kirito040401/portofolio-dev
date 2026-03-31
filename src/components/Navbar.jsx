@@ -12,7 +12,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Varians untuk animasi icon hamburger ke X
   const lineVariants = {
     closed: { rotate: 0, y: 0, opacity: 1 },
     opened: (custom) => ({
@@ -25,9 +24,10 @@ export default function Navbar() {
 
   return (
     <nav className={`fixed w-full z-[100] transition-all duration-500 ${
-      scrolled || isOpen ? 'bg-[#0a0a0c]/95 backdrop-blur-xl py-4 shadow-2xl' : 'bg-transparent py-6'
+      scrolled || isOpen 
+        ? 'bg-[#0a0a0c]/80 backdrop-blur-lg border-b border-white/5 py-4 shadow-2xl' 
+        : 'bg-transparent py-6'
     }`}>
-      {/* Container disamakan dengan max-w-6xl seperti di About/Resume */}
       <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-8">
         <div className="flex items-center justify-between">
           
@@ -69,19 +69,19 @@ export default function Navbar() {
                 animate={isOpen ? "opened" : "closed"}
                 variants={lineVariants}
                 className="w-7 h-[2px] bg-white mb-1.5 block rounded-full"
-              ></motion.span>
+              />
               <motion.span
                 custom={{ opacity: 0 }}
                 animate={isOpen ? "opened" : "closed"}
                 variants={lineVariants}
                 className="w-7 h-[2px] bg-accent mb-1.5 block rounded-full"
-              ></motion.span>
+              />
               <motion.span
                 custom={{ rotate: -45, y: -8 }}
                 animate={isOpen ? "opened" : "closed"}
                 variants={lineVariants}
                 className="w-7 h-[2px] bg-white block rounded-full"
-              ></motion.span>
+              />
             </button>
           </div>
         </div>
@@ -91,30 +91,62 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-0 left-0 w-full h-screen bg-[#0a0a0c] z-[100] flex flex-col justify-center items-center md:hidden"
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            /* Ditambahkan pt-32 agar tidak mengenai Navbar Logo/Button */
+            className="fixed inset-0 w-full h-screen bg-[#0a0a0c]/95 backdrop-blur-2xl z-[100] flex flex-col items-center pt-32 md:hidden overflow-y-auto"
           >
-            <div className="flex flex-col items-center space-y-8">
+            {/* Profile Section */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="flex flex-col items-center mb-10"
+            >
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-accent to-blue-500 rounded-full blur opacity-40 group-hover:opacity-75 transition duration-1000"></div>
+                
+                <div className="relative w-28 h-28 rounded-full border-2 border-white/10 overflow-hidden shadow-2xl bg-gray-900">
+                  {/* Periksa path: "assets/img/PasFoto.jpg" atau "asset/img/PasFoto.jpg" */}
+                  <img 
+                    src="/src/assets/img/PasFoto.jpg" 
+                    alt="Aditya Profile" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }} 
+                  />
+                </div>
+              </div>
+              
+              <div className="mt-4 text-center">
+                <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Aditya Alfiansyah</h2>
+                <p className="text-accent text-xs font-bold tracking-[0.2em] mt-1">FULLSTACK DEVELOPER</p>
+              </div>
+            </motion.div>
+
+            {/* Navigation Links */}
+            <div className="flex flex-col items-center space-y-6 pb-10">
               {navLinks.map((link, idx) => (
                 <motion.a 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: idx * 0.1 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + (idx * 0.1) }}
                   key={link} 
                   href={`#${link.toLowerCase()}`} 
                   onClick={() => setIsOpen(false)} 
-                  className="text-4xl font-black text-gray-400 hover:text-accent transition-colors tracking-tighter"
+                  className="text-3xl font-black text-gray-400 hover:text-white transition-colors tracking-tighter"
                 >
                   {link}
                 </motion.a>
               ))}
               <motion.a 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
                 href="#contact" 
                 onClick={() => setIsOpen(false)}
-                className="mt-4 bg-accent text-white px-10 py-4 rounded-2xl font-black text-xl shadow-xl shadow-accent/20"
+                className="mt-6 bg-accent text-white px-12 py-4 rounded-2xl font-black text-lg shadow-xl shadow-accent/30 hover:scale-105 active:scale-95 transition-all"
               >
                 HIRE ME
               </motion.a>
