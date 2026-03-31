@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mengatur scroll agar halus saat klik menu navigasi */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Menggunakan warna dark yang sudah kita definisikan di tailwind.config.js */
+  @apply bg-dark text-gray-100 antialiased overflow-x-hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Menghapus batasan lebar 1126px agar benar-benar responsif di semua layar */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
