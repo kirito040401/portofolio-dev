@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+// 1. SOLUSI TERBAIK: Import gambar agar diproses oleh build tool (Vite/Webpack)
+import PasFoto from './assets/img/PasFoto.jpg'; 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,10 +9,20 @@ export default function Navbar() {
   const navLinks = ['Home', 'About', 'Resume', 'Portfolio', 'Contact'];
 
   useEffect(() => {
+    // Menghindari scroll bocor saat menu mobile terbuka
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const lineVariants = {
     closed: { rotate: 0, y: 0, opacity: 1 },
@@ -18,7 +30,7 @@ export default function Navbar() {
       rotate: custom.rotate || 0,
       y: custom.y || 0,
       opacity: custom.opacity !== undefined ? custom.opacity : 1,
-      transition: { duration: 0.4, ease: "easeInOut" }
+      transition: { duration: 0.3, ease: "easeInOut" }
     })
   };
 
@@ -31,14 +43,12 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Logo */}
           <div className="flex-shrink-0 z-[110]">
             <h1 className="text-xl md:text-2xl font-black text-white tracking-tighter italic">
               ADITYA<span className="text-accent not-italic">.</span>SRG
             </h1>
           </div>
           
-          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
               <a 
@@ -58,7 +68,6 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile Button */}
           <div className="md:hidden flex items-center z-[110]">
             <button 
               onClick={() => setIsOpen(!isOpen)} 
@@ -87,7 +96,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
@@ -95,10 +103,8 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            /* Ditambahkan pt-32 agar tidak mengenai Navbar Logo/Button */
             className="fixed inset-0 w-full h-screen bg-[#0a0a0c]/95 backdrop-blur-2xl z-[100] flex flex-col items-center pt-32 md:hidden overflow-y-auto"
           >
-            {/* Profile Section */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -109,9 +115,8 @@ export default function Navbar() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-accent to-blue-500 rounded-full blur opacity-40 group-hover:opacity-75 transition duration-1000"></div>
                 
                 <div className="relative w-28 h-28 rounded-full border-2 border-white/10 overflow-hidden shadow-2xl bg-gray-900">
-                  {/* Periksa path: "assets/img/PasFoto.jpg" atau "asset/img/PasFoto.jpg" */}
                   <img 
-                    src="/src/assets/img/PasFoto.jpg" 
+                    src={PasFoto} // Menggunakan variable yang di-import
                     alt="Aditya Profile" 
                     className="w-full h-full object-cover"
                     onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }} 
@@ -125,7 +130,6 @@ export default function Navbar() {
               </div>
             </motion.div>
 
-            {/* Navigation Links */}
             <div className="flex flex-col items-center space-y-6 pb-10">
               {navLinks.map((link, idx) => (
                 <motion.a 
