@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// 1. SOLUSI TERBAIK: Import gambar agar diproses oleh build tool (Vite/Webpack)
-import PasFoto from './assets/img/PasFoto.jpg'; 
+
+/** * PERBAIKAN UTAMA: 
+ * Gunakan '../' untuk keluar dari folder 'components' 
+ * lalu masuk ke folder 'assets'.
+ */
+import PasFoto from '../assets/img/PasFoto.jpg'; 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,15 +13,12 @@ export default function Navbar() {
   const navLinks = ['Home', 'About', 'Resume', 'Portfolio', 'Contact'];
 
   useEffect(() => {
-    // Menghindari scroll bocor saat menu mobile terbuka
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    // Body scroll lock saat mobile menu terbuka
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
 
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
       document.body.style.overflow = 'unset';
@@ -43,12 +44,14 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-8">
         <div className="flex items-center justify-between">
           
+          {/* Logo */}
           <div className="flex-shrink-0 z-[110]">
             <h1 className="text-xl md:text-2xl font-black text-white tracking-tighter italic">
               ADITYA<span className="text-accent not-italic">.</span>SRG
             </h1>
           </div>
           
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
               <a 
@@ -68,6 +71,7 @@ export default function Navbar() {
             </a>
           </div>
 
+          {/* Hamburger Button */}
           <div className="md:hidden flex items-center z-[110]">
             <button 
               onClick={() => setIsOpen(!isOpen)} 
@@ -96,6 +100,7 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
@@ -116,7 +121,7 @@ export default function Navbar() {
                 
                 <div className="relative w-28 h-28 rounded-full border-2 border-white/10 overflow-hidden shadow-2xl bg-gray-900">
                   <img 
-                    src={PasFoto} // Menggunakan variable yang di-import
+                    src={PasFoto} 
                     alt="Aditya Profile" 
                     className="w-full h-full object-cover"
                     onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }} 
