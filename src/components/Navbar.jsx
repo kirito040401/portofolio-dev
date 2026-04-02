@@ -130,7 +130,7 @@ export default function Navbar() {
               </div>
               
               <div className="mt-4 text-center">
-                <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Aditya Alfiansyah</h2>
+                <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Aditya Alfiansyah Saragih</h2>
                 <p className="text-accent text-xs font-bold tracking-[0.2em] mt-1">FULLSTACK DEVELOPER</p>
               </div>
             </motion.div>
